@@ -63,11 +63,16 @@ class Locations implements FinderInterface, PersistenceInterface
 	
 	/**
 	 * Méthode pour créer une locations dans l'array
+	 * Retourne l'id de l'élément créée (respect du REST)
 	 */ 
 	public function create($name)
 	{
 		$this->locations[] = $name;
 		$this->sauverJson();
+		
+		// on compte le nombre de clé
+		$New_Cle = array_keys($this->locations);
+        return count($New_Cle) - 1;
 	}
 
     public function update($id, $name)
@@ -78,7 +83,8 @@ class Locations implements FinderInterface, PersistenceInterface
 
     public function delete($id)
     {
-		array_splice($this->locations, $id);
+		// correction du array_splice car cela supprimait tout -__-
+		array_splice($this->locations, $id, 1);
         $this->sauverJson();
 	}
 }

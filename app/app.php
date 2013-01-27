@@ -28,15 +28,14 @@ $app->get('/locations', function (Request $request) use ($app) {
 	
 	// test du format
 	$format = $request->guessBestFormat();
-	if($format == 'html')
+	if($format == 'json')
 	{
-		return $app->render('locations.php', array('locations' => $loc->findAll()));
+		$response = new Response(json_encode($loc->findAll()), 200, array('Content-Type' => 'application/json'));
+		return $response;
 	}
-	else if($format == 'json')
-	{
-		$response = new Response(json_encode($loc->findAll()));
-		$response->send();
-	}	
+	
+	// format html
+	return $app->render('locations.php', array('locations' => $loc->findAll()));
 });
 
 /**
@@ -44,6 +43,16 @@ $app->get('/locations', function (Request $request) use ($app) {
  */
 $app->get('/locations/(\d+)', function (Request $request, $id) use ($app) {
 	$loc = new Model\Locations();
+	
+	// test du format
+	$format = $request->guessBestFormat();
+	if($format == 'json')
+	{
+		$response = new Response(json_encode($loc->findOneById($id)), 200, array('Content-Type' => 'application/json'));
+		return $response;
+	}
+	
+	// forat html
 	return $app->render('location.php', array('location' => $loc->findOneById($id), 'id' => $id));
 }); 
 
@@ -52,7 +61,17 @@ $app->get('/locations/(\d+)', function (Request $request, $id) use ($app) {
  */ 
 $app->post('/locations', function (Request $request) use ($app) {
 	$loc = new Model\Locations();
-    $loc->create($request->getParameter('name'));
+    $id = $loc->create($request->getParameter('name'));
+    
+    // test du format
+	$format = $request->guessBestFormat();
+	if($format == 'json')
+	{
+		$response = new Response(json_encode($id),201, array('Content-Type' => 'application/json'));
+		var_dump($request);
+		return $response;
+	}
+    
     $app->redirect('/locations');
 });
 
@@ -61,6 +80,7 @@ $app->post('/locations', function (Request $request) use ($app) {
  */ 
 $app->put('/locations/(\d+)', function (Request $request, $id) use ($app) {
 	$loc = new Locations();
+	var_dump($request);
 	$loc->update($id, $request->getParameter('name'));
 	$app->redirect('/locations/'.$id);
 });
