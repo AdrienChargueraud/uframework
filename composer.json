@@ -1,0 +1,9 @@
+{
+    "require": {
+        "symfony/serializer": "~2.1",
+        "willdurand/negotiation": "1.0.*@dev"
+    },
+    "autoload": {
+        "psr-0": { "": "src/" }
+    }
+}
