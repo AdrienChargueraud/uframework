@@ -1,3 +1,2 @@
-Usage:
-
-    php -S localhost:8080 -t web/
+PHP Practicals spervised by Julien Muetton and William Durand
+New version
